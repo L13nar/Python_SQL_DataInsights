@@ -141,5 +141,6 @@ plt.xticks(rotation=45)  # Поворот меток по оси X для луч
 plt.tight_layout()
 plt.show()
 ```
-![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/Топ-5 ID_CONT Amount per Car.png)
+![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/Топ-5%20ID_CONT%20Amount%20per%20Car.png)
 ```python
+
