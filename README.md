@@ -89,3 +89,57 @@ plt.savefig(save_path, format='png')
 ```
 ![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/График%20прироста%20активных%20карт%20по%20месяцам.png)
 ```python
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Берем 'TR3_DSBD_MARGIN_TRANS.csv' 
+df = pd.read_csv('TRANSIT2_REMONT_ORDERS.csv', delimiter=';', encoding='KOI8-R')
+
+df.head()
+
+# Убедимся, что столбец TOTAL_AMOUNT имеет строковый формат
+df['TOTAL_AMOUNT'] = df['TOTAL_AMOUNT'].astype(str)
+
+# Заменяем запятые на точки и преобразуем в float
+df['TOTAL_AMOUNT'] = df['TOTAL_AMOUNT'].str.replace(',', '.').astype(float)
+
+# Фильтрация данных
+filtered_df = df[
+    (df['CAR_NUMBER'].str.contains('[А-Яа-я0-9]')) &
+    (df['TOTAL_AMOUNT'] > 0) &
+    ~((df['CAR_NUMBER'].str.contains('0000')) | (df['CAR_NUMBER'].str.contains('-')))
+]
+
+# Группировка и вычисление агрегатных значений
+grouped_df = filtered_df.groupby('ID_CONT').agg(
+    {
+        'CAR_NUMBER': 'count',
+        'TOTAL_AMOUNT': 'sum'
+    }
+).reset_index()
+
+# Вывод результатов
+print(grouped_df)
+# Преобразование данных в числовой формат
+grouped_df['CAR_NUMBER'] = pd.to_numeric(grouped_df['CAR_NUMBER'], errors='coerce')
+grouped_df['TOTAL_AMOUNT'] = pd.to_numeric(grouped_df['TOTAL_AMOUNT'], errors='coerce')
+
+# Вычисление колонки TOTAL_AMOUNT_PER_CAR
+grouped_df['TOTAL_AMOUNT_PER_CAR'] = grouped_df['TOTAL_AMOUNT'] / grouped_df['CAR_NUMBER']
+
+# Сортировка данных по убыванию значения TOTAL_AMOUNT_PER_CAR и выбор топ-5
+top_5_data = grouped_df.sort_values(by='TOTAL_AMOUNT_PER_CAR', ascending=False).head(5)
+
+# Построение столбчатой диаграммы
+plt.figure(figsize=(12, 6))
+plt.bar(top_5_data['ID_CONT'], top_5_data['TOTAL_AMOUNT_PER_CAR'])
+plt.xlabel('ID_CONT')
+plt.ylabel('TOTAL_AMOUNT_PER_CAR')
+plt.title('Топ-5 ID_CONT по TOTAL_AMOUNT_PER_CAR')
+plt.xticks(rotation=45)  # Поворот меток по оси X для лучшей читаемости
+plt.tight_layout()
+plt.show()
+```
+![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/Топ-5 ID_CONT Amount per Car.png)
+```python
