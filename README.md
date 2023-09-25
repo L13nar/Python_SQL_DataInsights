@@ -87,5 +87,5 @@ save_path = os.path.join(home_directory, 'График прироста акти
 # Сохраните график в формате .png в домашней директории
 plt.savefig(save_path, format='png')
 ```python
-![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/График прироста активных карт по месяцам.png)
+![](https://github.com/L13nar/Python_SQL_DataInsights/blob/main/График%20прироста%20активных%20карт%20по%20месяцам.png)
 ```python
